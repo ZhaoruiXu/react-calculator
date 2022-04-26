@@ -1,0 +1,58 @@
+@use "variables" as *;
+
+.keypad {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-areas:
+    "ms mc mr m-plus m-minus"
+    "seven eight nine ac c"
+    "four five six multiply divide"
+    "one two three add subtract"
+    "sign zero decimal percent square-root"
+    "equal equal equal equal equal";
+  gap: 0.35rem;
+
+  button {
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    width: 7rem;
+    height: 5rem;
+    transition: opacity 0.15s ease-in-out;
+    &:hover {
+      opacity: 0.75;
+      cursor: pointer;
+    }
+  }
+  .memory {
+    background-color: $memoBtnColor;
+    color: $white;
+  }
+
+  .clear {
+    background-color: $clearBtnColor;
+    font-weight: 600;
+  }
+
+  .number,
+  .deicmal,
+  .sign {
+    background-color: $numBtnColor;
+    font-size: 2rem;
+  }
+
+  .operator,
+  .percent-operator,
+  .square-root-operator {
+    background-color: $operatorBtnColor;
+    color: $white;
+    font-size: 2rem;
+  }
+
+  .enter {
+    background-color: $equalBtnColor;
+    color: $white;
+    width: 100%;
+  }
+}

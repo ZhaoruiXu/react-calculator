@@ -1,0 +1,23 @@
+@use "variables" as *;
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.App {
+  background-color: $appBgColor;
+  padding: 2rem 2rem 1.15rem 2rem;
+  border-radius: 0.75rem;
+  header {
+    color: $white;
+  }
+  footer {
+    color: $white;
+    font-weight: 300;
+    text-align: center;
+    margin-top: 1.15rem;
+  }
+}
