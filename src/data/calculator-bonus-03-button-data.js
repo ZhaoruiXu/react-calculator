@@ -102,7 +102,7 @@ export const calculatorButtons = [
     value: 0,
   },
   {
-    type: "deicmal",
+    type: "decimal",
     className: "decimal",
     text: ".",
     value: ".",

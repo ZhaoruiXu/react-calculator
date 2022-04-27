@@ -8,8 +8,8 @@ const Keypad = ({ handleButton }) => {
         return (
           <button
             key={index}
-            onClick={e => {
-              handleButton(e);
+            onClick={() => {
+              handleButton(button.type, button.text.toString());
             }}
             className={`${button.type} ${button.className}`}
             style={{ gridArea: button.className }}

@@ -12,14 +12,9 @@ function App() {
   const [result, setResult] = useState("");
   const [display, setDisplay] = useState("");
 
-  const handleButton = e => {
-    const userInput = e.target;
-
+  const handleButton = (userInputType, userInputValue) => {
     // number and deicmal input
-    if (
-      userInput.classList.contains("number") ||
-      userInput.classList.contains("decimal")
-    ) {
+    if (userInputType === "number" || userInputType === "decimal") {
       if (
         !result ||
         result === "Syntax Error" ||
@@ -27,13 +22,13 @@ function App() {
         result === "Infinity"
       ) {
         // first numebr input
-        setNumberInput1(userInput.innerHTML);
-        setResult(userInput.innerHTML);
+        setNumberInput1(userInputValue);
+        setResult(userInputValue);
       } else {
         // following input
         if (result.length < 16) {
           // check for duplicated "."
-          if (userInput.innerHTML === ".") {
+          if (userInputValue === ".") {
             if (!numberInput2 && !operatorInput && numberInput1.includes(".")) {
               return;
             } else if (numberInput2.includes(".")) {
@@ -42,9 +37,16 @@ function App() {
           }
           // avoid two 0's in the beginning
           if (
-            result.length === 1 &&
-            userInput.innerHTML === "0" &&
-            result.charAt(0) === "0"
+            !operatorInput &&
+            numberInput1.length === 1 &&
+            userInputValue === "0" &&
+            numberInput1.charAt(0) === "0"
+          ) {
+            return;
+          } else if (
+            numberInput2.length === 1 &&
+            userInputValue === "0" &&
+            numberInput2.charAt(0) === "0"
           ) {
             return;
           }
@@ -52,27 +54,24 @@ function App() {
           // concate following number input to first number input
           if (!operatorInput) {
             setNumberInput1(prev => {
-              return prev.concat(userInput.innerHTML);
+              return prev.concat(userInputValue);
             });
           } else {
             // there is an operatorInput then set second number input
             setNumberInput2(prev => {
-              return prev.concat(userInput.innerHTML);
+              return prev.concat(userInputValue);
             });
           }
 
           setResult(prev => {
-            return prev.concat(userInput.innerHTML);
+            return prev.concat(userInputValue);
           });
         }
       }
     }
 
     // operator and equal input
-    else if (
-      userInput.classList.contains("operator") ||
-      userInput.classList.contains("equal")
-    ) {
+    else if (userInputType === "operator" || userInputType === "enter") {
       if (
         !result ||
         result === "Syntax Error" ||
@@ -83,21 +82,19 @@ function App() {
         return;
       } else {
         if (!operatorInput) {
-          if (userInput.innerHTML !== "=") {
-            setOperatorInput(userInput.innerHTML);
+          if (userInputValue !== "=") {
+            setOperatorInput(userInputValue);
             //display
             setResult(prev => {
-              return prev.concat(userInput.innerHTML);
+              return prev.concat(userInputValue);
             });
           }
         } else if (!numberInput2) {
           // if want to overwrite operator
-          if (userInput.innerHTML !== "=") {
-            setOperatorInput(userInput.innerHTML);
+          if (userInputValue !== "=") {
+            setOperatorInput(userInputValue);
             setResult(prev => {
-              return prev
-                .substring(0, prev.length - 1)
-                .concat(userInput.innerHTML);
+              return prev.substring(0, prev.length - 1).concat(userInputValue);
             });
           }
         }
@@ -140,9 +137,9 @@ function App() {
 
         setNumberInput1(result.toString());
         setNumberInput2("");
-        if (userInput.innerHTML !== "=") {
-          setOperatorInput(userInput.innerHTML);
-          setResult(result.toString().concat(userInput.innerHTML));
+        if (userInputValue !== "=") {
+          setOperatorInput(userInputValue);
+          setResult(result.toString().concat(userInputValue));
         } else {
           setOperatorInput("");
           setResult(result.toString());
@@ -151,7 +148,7 @@ function App() {
     }
 
     // clear input
-    else if (userInput.classList.contains("c")) {
+    else if (userInputValue === "C") {
       if (
         result === "Syntax Error" ||
         result === "NaN" ||
@@ -181,7 +178,7 @@ function App() {
     }
 
     // all clear input
-    else if (userInput.classList.contains("ac")) {
+    else if (userInputValue === "AC") {
       setResult("");
       setNumberInput1("");
       setNumberInput2("");
@@ -189,7 +186,7 @@ function App() {
     }
 
     // sign-change input
-    else if (userInput.classList.contains("sign")) {
+    else if (userInputType === "sign") {
       if (numberInput1 && !operatorInput && !numberInput2) {
         setNumberInput1(prev => {
           const reverseSign = parseInt(prev) * -1;
@@ -203,7 +200,7 @@ function App() {
     }
 
     // percent operator input
-    else if (userInput.classList.contains("percent-operator")) {
+    else if (userInputType === "percent-operator") {
       if (numberInput1 && !operatorInput && !numberInput2) {
         setNumberInput1(prev => {
           const percentInput = parseInt(prev) * 0.01;
@@ -217,7 +214,7 @@ function App() {
     }
 
     // square-root operator input
-    else if (userInput.classList.contains("square-root-operator")) {
+    else if (userInputType === "square-root-operator") {
       if (numberInput1 && !operatorInput && !numberInput2) {
         setNumberInput1(prev => {
           const squareRootInput = mathjs.sqrt(parseInt(prev));
@@ -231,7 +228,7 @@ function App() {
     }
 
     // memory input
-    else if (userInput.classList.contains("memory")) {
+    else if (userInputType === "memory") {
       if (!operatorInput && !numberInput2) {
         if (
           result === "Syntax Error" ||
@@ -244,7 +241,7 @@ function App() {
           return;
         }
         let memoryMath;
-        switch (userInput.innerHTML) {
+        switch (userInputValue) {
           case "MS":
             setMemory(numberInput1);
             break;
@@ -279,7 +276,7 @@ function App() {
   };
 
   useEffect(() => {
-    // console.log(numberInput1, operatorInput, numberInput2, result, memory);
+    console.log(numberInput1, operatorInput, numberInput2, result, memory);
     setDisplay(result);
   }, [numberInput2, operatorInput, numberInput1, result, memory]);
 
@@ -291,7 +288,7 @@ function App() {
       <Display displayInput={display} />
       <Keypad handleButton={handleButton} />
       <footer>
-        <p>©2022 Rui Xu</p>
+        <p>&copy; {new Date().getFullYear()} Rui Xu</p>
       </footer>
     </div>
   );
