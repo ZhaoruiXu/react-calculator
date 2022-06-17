@@ -2,6 +2,8 @@ import React from "react";
 import Display from "./Display";
 import Keypad from "./Keypad";
 import { useState, useEffect } from "react";
+// Development Components
+import { BrowserRouter } from "react-router-dom";
 const mathjs = require("mathjs");
 
 function App() {
@@ -281,16 +283,18 @@ function App() {
   }, [numberInput2, operatorInput, numberInput1, result, memory]);
 
   return (
-    <div className='App'>
-      <header>
-        <h1>React Calcualtor</h1>
-      </header>
-      <Display displayInput={display} />
-      <Keypad handleButton={handleButton} />
-      <footer>
-        <p>&copy; {new Date().getFullYear()} Rui Xu</p>
-      </footer>
-    </div>
+    <BrowserRouter basename='/calculator'>
+      <div className='App'>
+        <header>
+          <h1>React Calcualtor</h1>
+        </header>
+        <Display displayInput={display} />
+        <Keypad handleButton={handleButton} />
+        <footer>
+          <p>&copy; {new Date().getFullYear()} Rui Xu</p>
+        </footer>
+      </div>
+    </BrowserRouter>
   );
 }
 
